@@ -1,15 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Text.RegularExpressions;
 
-var fileName = Path.Combine(Environment.CurrentDirectory.ToString(), "book.txt");
+var solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
+var filePath = Path.Combine(solutionDirectory, "book.txt");
 
-if (!File.Exists(fileName))
+if (!File.Exists(filePath))
 {
-    throw new FileNotFoundException(fileName);
+    throw new FileNotFoundException(filePath);
 }
 
-var fileText= await File.ReadAllLinesAsync(fileName);
-
+var fileText= await File.ReadAllLinesAsync(filePath);
 var trackerDictionary = new Dictionary<char, int>();
 var wordTracker = new Dictionary<string, int>();
 
@@ -23,6 +23,7 @@ foreach (var line in fileText)
         foreach (var word in wordsInLine)
         {
             var wordWithNoSpecialChar = Regex.Replace(word, @"(\s+|@|&|\*|\(|\)|<|>|#|\""|,|\.|;|:)", string.Empty).ToLower();
+      
             if(wordTracker.ContainsKey(wordWithNoSpecialChar))
             {
                 wordTracker[wordWithNoSpecialChar]++;
@@ -51,3 +52,4 @@ foreach (var item in wordTracker.OrderByDescending(key => key.Value))
 {
     Console.WriteLine($"{item.Key}: {item.Value}");
 }
+Console.ReadKey();
